@@ -1,29 +1,32 @@
 #include "circle_queue.h"
 
+#define HWSERIAL Serial2
+
 void setup() {
   Serial.begin(9600);
-  while (!Serial);
+  HWSERIAL.begin(9600);
 
-  CQueue queue;
-
-  // Load test data into the queue.
-  for(int i = 0; i < 300; ++i){
-    StaticJsonDocument<CELL_SIZE> doc;
-    doc["hello"] = i;
-    queue.add(doc);
-    Serial.println("Object Added");
-  }
-
-  // Pop test data from the queue and read it.
-  for(int i = 0; i < 258; ++i){
-    StaticJsonDocument<CELL_SIZE> doc = queue.pop();
-    int num = doc["hello"];
-    String hello = String(num);
-    Serial.println("Object Popped: doc[\"hello\"]: " + hello);
-  }
+  Serial.println("Sending Message");
+  String testMsg = "Hello World";
+  HWSERIAL.println("Hello World");
+  Serial.println("Checking for Messages");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  int incomingByte;
 
+  if (Serial.available() > 0) {
+    incomingByte = Serial.read();
+    Serial.print("USB received: ");
+    Serial.println(incomingByte, DEC);
+    HWSERIAL.print("USB received:");
+    HWSERIAL.println(incomingByte, DEC);
+  }
+  if (HWSERIAL.available() > 0) {
+    incomingByte = HWSERIAL.read();
+    Serial.print("UART received: ");
+    Serial.println(incomingByte, DEC);
+    HWSERIAL.print("UART received:");
+    HWSERIAL.println(incomingByte, DEC);
+  }
 }
