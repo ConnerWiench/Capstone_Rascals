@@ -15,11 +15,14 @@ void setup() {
 
   Serial.println("The Serial is connected to the computer...");
 
+  Serial.println("Radio Config:");
+  radio.print_config();
+
   radio.send_message("Hello World", DEST_ADDH, DEST_ADDL, 23);
   
   StaticJsonDocument<CELL_SIZE> doc;
   for(int i = 0; i < 10; i++){
-    doc
+    
   }
 }
 
@@ -33,6 +36,7 @@ void loop(){
 
   if (Serial.available()) {
 		String input = Serial.readString();
+    Serial.print("Sending... "); Serial.println(input);
 		radio.send_message(input, DEST_ADDH, DEST_ADDL, 23);
   }
 }
