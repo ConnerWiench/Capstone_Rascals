@@ -6,8 +6,11 @@ on the TES-22 and the various commands and features that were built into it.
 
 **Libraries that are used:**
 ---
-ArduinoJson by Benoit Blanchon - Version 6.21.4
-  - This version of ArduinoJson will allow us to send our data with JSON packets for ease of use during the development and testing process.
+Google Protocol Buffers - 
+  - We will be using a Google Protocol Buffer .proto file to define how our structure is going to look, an define how the data we will be getting will be stored.
+
+Nanopb -
+  - Nanopb library will be used in order to successfully encode and decode the protobuf messages with ease.
 
 We will be using the LoRa_E220 library by Renzo Mischianti 
   - This provides us with code for the LoRa to help us get the LoRa module up an running.
