@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message Data {
+    float radiationTotalCount = 1;     //total count of the radiation sensor
+    float radiationTotalPulseTime = 2;  //total time the the pulse has been gotten for
+    int32 integerBitSpectrum = 3;       //sends the 4096 X 32 bit spectrum to recieve??
+}
