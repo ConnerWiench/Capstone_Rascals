@@ -1,6 +1,7 @@
+//This is going to mirror the radiation.cpp file that can be compiled on the computer...
 #include <stdio.h>
-#include <pb_encode.h>
-#include <pb_decode.h>
+#include "pb_encode.h"
+#include "pb_decode.h"
 #include "rad.pb.h"
 #include "radQueue.h"
 
@@ -8,7 +9,7 @@ static CQueue queue;
 
 //note - the nanopb needs to be a uint8_t, but we can still add the other 32 to the struct
 //we created with the .proto file. --honestly works pretty freaking smooth
-int main(){
+void testFunction(){
     /*This is where we will store our message*/
     uint8_t buffer[128];
     size_t messageLength;
@@ -31,13 +32,13 @@ int main(){
             status = pb_encode(&stream, Data_fields, &message);
             messageLength = stream.bytes_written;
 
-            queue.enqueue(buffer);
+            queue.addqueue(buffer);
         
 
         //double check for any errors
         if(!status){
             printf("Encoding failed! %s\n", PB_GET_ERROR(&stream));
-            return 1;
+            //return 1;
         }
         }
     }
@@ -51,7 +52,7 @@ int main(){
             Data message1 = Data_init_zero;
 
             //get the data from the queue
-            queue.dequeue(buffer);
+            queue.unqueue(buffer);
 
             //make a stream that will read from the buffer
             pb_istream_t stream = pb_istream_from_buffer(buffer, messageLength);
@@ -62,18 +63,25 @@ int main(){
             //double check if there are any errors
             if(!status){
                 printf("Decodeing failed! %s\n", PB_GET_ERROR(&stream));
-                return 1;
+                //return 1;
             }
 
             //print the message below
-            printf("Count: %d\n", count);
-            printf("Radiation count: %f\n", message1.radiationTotalCount);
-            printf("Radiation Total pulse: %f\n", message1.radiationTotalPulseTime);
-            printf("IntegerBitSpectrum: %d\n", message1.integerBitSpectrum);
-            printf("\n");
-
+            Serial.println(count);
+            Serial.println(message1.radiationTotalCount);
+            Serial.println(message1.radiationTotalPulseTime);
+            Serial.println(message1.integerBitSpectrum);
             count++;
         }
 
     }
+}
+
+void setup(){
+  Serial.begin(9600);
+  testFunction();
+}
+
+void loop(){
+
 }
