@@ -1,7 +1,7 @@
 #include <ArduinoJson.h>
 
 #define ARR_SIZE 256 // How many array segments are allowed at once. This defines the objects in the queue
-#define CELL_SIZE 256 // The size of each Json Document object in bytes.  This of each key-value pair as a single string for size estimate.
+#define CELL_SIZE 196 // The size of each Json Document object in bytes.  This of each key-value pair as a single string for size estimate.
 
 class CQueue{
     private:
