@@ -3,7 +3,7 @@
 
 #ifndef PB_RAD_PB_H_INCLUDED
 #define PB_RAD_PB_H_INCLUDED
-#include "pb.h"
+#include <pb.h>
 
 #if PB_PROTO_HEADER_VERSION != 40
 #error Regenerate this file with the current version of nanopb generator.
@@ -11,9 +11,14 @@
 
 /* Struct definitions */
 typedef struct _Data {
-    float radiationTotalCount; /* total count of the radiation sensor */
-    float radiationTotalPulseTime; /* total time the the pulse has been gotten for */
-    int32_t integerBitSpectrum; /* sends the 4096 X 32 bit spectrum to recieve?? */
+    float startTime; /* Time since zeroed out */
+    float totalCount; /* TID level (Total Ionizing dose) */
+    /* There are no arrays in protobuf, so you define it as below */
+    pb_callback_t spectrum; /* sends the 4096 X 32 bit spectrum to recieve */
+    float longitude; /* longitude of the gps at data read */
+    float lattitude; /* lattitude of the gps at data read */
+    float altitude; /* how high the payload is */
+    int32_t pulseTime; /* Duration of the read */
 } Data;
 
 
@@ -22,20 +27,28 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define Data_init_default                        {0, 0, 0}
-#define Data_init_zero                           {0, 0, 0}
+#define Data_init_default                        {0, 0, {{NULL}, NULL}, 0, 0, 0, 0}
+#define Data_init_zero                           {0, 0, {{NULL}, NULL}, 0, 0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define Data_radiationTotalCount_tag             1
-#define Data_radiationTotalPulseTime_tag         2
-#define Data_integerBitSpectrum_tag              3
+#define Data_startTime_tag                       1
+#define Data_totalCount_tag                      2
+#define Data_spectrum_tag                        3
+#define Data_longitude_tag                       4
+#define Data_lattitude_tag                       5
+#define Data_altitude_tag                        6
+#define Data_pulseTime_tag                       7
 
 /* Struct field encoding specification for nanopb */
 #define Data_FIELDLIST(X, a) \
-X(a, STATIC,   SINGULAR, FLOAT,    radiationTotalCount,   1) \
-X(a, STATIC,   SINGULAR, FLOAT,    radiationTotalPulseTime,   2) \
-X(a, STATIC,   SINGULAR, INT32,    integerBitSpectrum,   3)
-#define Data_CALLBACK NULL
+X(a, STATIC,   SINGULAR, FLOAT,    startTime,         1) \
+X(a, STATIC,   SINGULAR, FLOAT,    totalCount,        2) \
+X(a, CALLBACK, REPEATED, UINT32,   spectrum,          3) \
+X(a, STATIC,   SINGULAR, FLOAT,    longitude,         4) \
+X(a, STATIC,   SINGULAR, FLOAT,    lattitude,         5) \
+X(a, STATIC,   SINGULAR, FLOAT,    altitude,          6) \
+X(a, STATIC,   SINGULAR, INT32,    pulseTime,         7)
+#define Data_CALLBACK pb_default_field_callback
 #define Data_DEFAULT NULL
 
 extern const pb_msgdesc_t Data_msg;
@@ -44,8 +57,7 @@ extern const pb_msgdesc_t Data_msg;
 #define Data_fields &Data_msg
 
 /* Maximum encoded size of messages (where known) */
-#define Data_size                                21
-#define RAD_PB_H_MAX_SIZE                        Data_size
+/* Data_size depends on runtime parameters */
 
 #ifdef __cplusplus
 } /* extern "C" */

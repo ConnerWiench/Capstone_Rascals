@@ -1,7 +1,12 @@
 syntax = "proto3";
 
 message Data {
-    float radiationTotalCount = 1;     //total count of the radiation sensor
-    float radiationTotalPulseTime = 2;  //total time the the pulse has been gotten for
-    int32 integerBitSpectrum = 3;       //sends the 4096 X 32 bit spectrum to recieve??
+    float startTime = 1;                            // Time since zeroed out
+    float totalCount = 2;                           // TID level (Total Ionizing dose)
+    // There are no arrays in protobuf, so you define it as below
+    repeated uint32 spectrum = 3 [packed = true];   //sends the 4096 X 32 bit spectrum to recieve
+    float longitude = 4;                            //longitude of the gps at data read
+    float lattitude = 5;                            //lattitude of the gps at data read
+    float altitude = 6;                             //how high the payload is
+    int32 pulseTime = 7;                            //Duration of the read
 }
