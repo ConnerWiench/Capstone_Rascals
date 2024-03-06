@@ -1,4 +1,3 @@
-
 #define ARR_SIZE 4096
 
 void setup() {
