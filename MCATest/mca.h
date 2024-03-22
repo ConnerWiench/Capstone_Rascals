@@ -1,8 +1,9 @@
+#include "wiring.h"
 #include <stdint.h>
 #include "usb_serial.h"
 #include "core_pins.h"
 
-#define CAPTURE_SIZE 4160
+#define CAPTURE_SIZE 4096
 #define TIMEOUT_SECONDS 10
 
 #include "HardwareSerial.h"
@@ -50,13 +51,19 @@ uint32_t MCA::capture(){
   while((!mSerial->available()) && (timeout > millis())){} // Wait for a response with timeout
 
   int hold = 0;
-  for(int i = 0; (i < captureSize) && (timeout > millis()); ++i){ // Reads out the serial data against a count instead of if Serial is available.  Also has timeout
+  uint32_t buffer = 0;
+  for(int i = 0; (i < captureSize * 4) && (timeout > millis()); ++i){ // Reads out the serial data against a count instead of if Serial is available.  Also has timeout
     hold = mSerial->read();
     if(hold <= -1){
       --i;
       continue;
     }
-    recentCapture[i] = hold;
+
+    buffer = (buffer << 8) | hold; // Bitwise shift buffer 8 bits at a read.
+    if(!((i % 4) - 1)){ // When 32 bits have been read, save result and clear buffer.
+      recentCapture[i/4] = buffer;
+      buffer = 0;
+    }
   }
 
   if(millis() >= timeout){
