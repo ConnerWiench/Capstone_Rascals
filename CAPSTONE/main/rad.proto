@@ -1,12 +1,26 @@
-syntax = "proto3";
+//protoc -I=. --plugin=protoc-gen-nanopb=../../generator/protoc-gen-nanopb --nanopb_out=. rad.proto
+//syntax = "proto2";
 
-message Data {
+//message DataMessage {
+//    repeated uint32 values = 1 [(nanopb).max_size = 40, (nanopb).fixed_length = true];
+//    optional uint32 values_count = 2;
+//}
+
+// protoc -I=./ --cpp_out=./ rad.proto
+
+syntax = "proto3";
+//import "nanopb.proto";
+
+package CAPSTONE;
+
+message MainData {
     float startTime = 1;                            // Time since zeroed out
     float totalCount = 2;                           // TID level (Total Ionizing dose)
-    // There are no arrays in protobuf, so you define it as below
-    repeated uint32 spectrum = 3 [packed = true];   //sends the 4096 X 32 bit spectrum to recieve
-    float longitude = 4;                            //longitude of the gps at data read
-    float lattitude = 5;                            //lattitude of the gps at data read
-    float altitude = 6;                             //how high the payload is
-    int32 pulseTime = 7;                            //Duration of the read
+    float longitude = 5;                            //longitude of the gps at data read
+    float lattitude = 6;                            //lattitude of the gps at data read
+    float altitude = 7;                             //how high the payload is
+    int32 pulseTime = 8;                            //Duration of the read
+    int32 spectrum_count= 10;
+    repeated uint32 spectrum = 9;                   //spectrum data
+
 }

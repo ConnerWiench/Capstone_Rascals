@@ -111,11 +111,7 @@ bool checkreturn pb_read(pb_istream_t *stream, pb_byte_t *buf, size_t count)
         return false;
 #endif
     
-    if (stream->bytes_left < count)
-        stream->bytes_left = 0;
-    else
-        stream->bytes_left -= count;
-
+    stream->bytes_left -= count;
     return true;
 }
 
@@ -1330,13 +1326,6 @@ void pb_release(const pb_msgdesc_t *fields, void *dest_struct)
     {
         pb_release_single_field(&iter);
     } while (pb_field_iter_next(&iter));
-}
-#else
-void pb_release(const pb_msgdesc_t *fields, void *dest_struct)
-{
-    /* Nothing to release without PB_ENABLE_MALLOC. */
-    PB_UNUSED(fields);
-    PB_UNUSED(dest_struct);
 }
 #endif
 

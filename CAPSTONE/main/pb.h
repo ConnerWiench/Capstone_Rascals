@@ -26,14 +26,14 @@
 /* #define PB_FIELD_32BIT 1 */
 
 /* Disable support for error messages in order to save some code space. */
-/* #define PB_NO_ERRMSG 1 */
+#define PB_NO_ERRMSG 1
 
 /* Disable support for custom streams (support only memory buffers). */
-/* #define PB_BUFFER_ONLY 1 */
+#define PB_BUFFER_ONLY 1
 
 /* Disable support for 64-bit datatypes, for compilers without int64_t
    or to save some code space. */
-/* #define PB_WITHOUT_64BIT 1 */
+/*#define PB_WITHOUT_64BIT 1 */
 
 /* Don't encode scalar arrays as packed. This is only to be used when
  * the decoder on the receiving side cannot process packed scalar arrays.
@@ -42,7 +42,7 @@
 
 /* Enable conversion of doubles to floats for platforms that do not
  * support 64-bit doubles. Most commonly AVR. */
-/* #define PB_CONVERT_DOUBLE_FLOAT 1 */
+#define PB_CONVERT_DOUBLE_FLOAT 1
 
 /* Check whether incoming strings are valid UTF-8 sequences. Slows down
  * the string processing slightly and slightly increases code size. */
@@ -55,7 +55,7 @@
 /* Configure static assert mechanism. Instead of changing these, set your
  * compiler to C11 standard mode if possible. */
 /* #define PB_C99_STATIC_ASSERT 1 */
-/* #define PB_NO_STATIC_ASSERT 1 */
+#define PB_NO_STATIC_ASSERT 1
 
 /******************************************************************
  * You usually don't need to change anything below this line.     *
@@ -65,7 +65,7 @@
 
 /* Version of the nanopb library. Just in case you want to check it in
  * your own program. */
-#define NANOPB_VERSION "nanopb-0.4.9-dev"
+#define NANOPB_VERSION "nanopb-0.4.7-dev"
 
 /* Include all the system headers needed by nanopb. You will need the
  * definitions of the following:
@@ -169,9 +169,6 @@ extern "C" {
 #  ifndef PB_STATIC_ASSERT
 #    if defined(__ICCARM__)
        /* IAR has static_assert keyword but no _Static_assert */
-#      define PB_STATIC_ASSERT(COND,MSG) static_assert(COND,#MSG);
-#    elif defined(_MSC_VER) && (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 201112)
-       /* MSVC in C89 mode supports static_assert() keyword anyway */
 #      define PB_STATIC_ASSERT(COND,MSG) static_assert(COND,#MSG);
 #    elif defined(PB_C99_STATIC_ASSERT)
        /* Classic negative-size-array static assert mechanism */
@@ -905,13 +902,10 @@ struct pb_extension_s {
 #define PB_INLINE_CONSTEXPR PB_CONSTEXPR
 #endif  // __cplusplus >= 201703L
 
-extern "C++"
-{
 namespace nanopb {
 // Each type will be partially specialized by the generator.
 template <typename GenMessageT> struct MessageDescriptor;
 }  // namespace nanopb
-}
 #endif  /* __cplusplus */
 
 #endif

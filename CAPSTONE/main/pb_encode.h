@@ -90,6 +90,9 @@ bool pb_encode_ex(pb_ostream_t *stream, const pb_msgdesc_t *fields, const void *
  * the data. */
 bool pb_get_encoded_size(size_t *size, const pb_msgdesc_t *fields, const void *src_struct);
 
+// get the number of bytes written for a varint
+bool pb_get_varint_size(size_t *size, const uint32_t val);
+
 /**************************************
  * Functions for manipulating streams *
  **************************************/
