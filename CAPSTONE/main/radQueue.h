@@ -26,12 +26,12 @@ class CQueue{
             return currentSize;
         }
 
-        void dequeue(uint8_t result[128], size_t &length);
+        void dequeue(uint8_t result[128], uint32_t &length);
 
-        void enqueue(const uint8_t value[128], size_t length);
+        void enqueue(const uint8_t value[128], uint32_t length);
 };
 
-void CQueue::dequeue(uint8_t result[128], size_t &length){
+void CQueue::dequeue(uint8_t result[128], uint32_t &length){
     if(!isEmpty()){
         std::copy(buffer[front], buffer[front] + 128, result);
         length = messageLength[front];
@@ -45,7 +45,7 @@ void CQueue::dequeue(uint8_t result[128], size_t &length){
     }
 }
 
-void CQueue::enqueue(const uint8_t value[128], size_t length){
+void CQueue::enqueue(const uint8_t value[128], uint32_t length){
     if(!isFull()){
         std::copy(value, value + 128, buffer[rear]);
         messageLength[rear] = length;
@@ -55,7 +55,7 @@ void CQueue::enqueue(const uint8_t value[128], size_t length){
         //print a warnign the the queue is full (for debug)
         std::cerr << "Warning: Queue is full, overwriting first element..." << std::endl;
         uint8_t dummyValues[128];
-        size_t dummyLength;
+        uint32_t dummyLength;
         dequeue(dummyValues, dummyLength); //remove the first element
         enqueue(value, length); // add the new value to the newfound space
     }

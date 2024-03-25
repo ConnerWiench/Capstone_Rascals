@@ -43,6 +43,7 @@ CAPSTONE_MainData encodeMainData(int bufferSize, uint8_t buffer[],
     }
 }
 
+// The main program function
 int main(){
     /*This is where we will store our message*/
     uint8_t buffer[BUFFER_SIZE];
@@ -52,6 +53,7 @@ int main(){
     // Encode the message
     for(int i = 0; i < ARR_SIZE; i++){
         CAPSTONE_MainData testMessage = encodeMainData(BUFFER_SIZE, buffer, data, 1 + i, 2 + i, 3 + i, 4 + i, 5 + i, 6 + i, &messageSize);
+        printf("----------Encoded Output:--------------- \n");
         printf("------------- Count: %d ---------------- \n", i + 1);
 
         printf("Time since zero: %f\n", testMessage.startTime);
@@ -74,6 +76,4 @@ int main(){
         printf("----------------------------------------\n");
         printf("\n\n");
     }
-
-
 }
