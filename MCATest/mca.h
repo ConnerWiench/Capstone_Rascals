@@ -5,6 +5,7 @@
 
 #define CAPTURE_SIZE 4096
 #define TIMEOUT_SECONDS 10
+#define CHANNEL_SIZE 4
 
 #include "HardwareSerial.h"
 #include <stdio.h>
@@ -52,7 +53,8 @@ uint32_t MCA::capture(){
 
   int hold = 0;
   uint32_t buffer = 0;
-  for(int i = 0; (i < captureSize * 4) && (timeout > millis()); ++i){ // Reads out the serial data against a count instead of if Serial is available.  Also has timeout
+  
+  for(int i = 0; (i < captureSize * CHANNEL_SIZE) && (timeout > millis()); ++i){ // Reads out the serial data against a count instead of if Serial is available.  Also has timeout
     hold = mSerial->read();
     if(hold <= -1){
       --i;
@@ -60,7 +62,7 @@ uint32_t MCA::capture(){
     }
 
     buffer = (buffer << 8) | hold; // Bitwise shift buffer 8 bits at a read.
-    if(!((i % 4) - 1)){ // When 32 bits have been read, save result and clear buffer.
+    if(!(i % 4)){ // When 32 bits have been read, save result and clear buffer.
       recentCapture[i/4] = buffer;
       buffer = 0;
     }
