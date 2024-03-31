@@ -73,5 +73,5 @@ uint32_t MCA::capture(){
     return 2;  // Return error value if timed out.
   }
 
-  return 1;
+  return 0;
 }

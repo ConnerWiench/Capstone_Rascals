@@ -10,21 +10,27 @@ class LoRa{
   private:
     LoRa_E220 *radio;
     void printParameters(struct Configuration configuration);
+	int chan, dstH, dstL;
 
   public:
-    LoRa(HardwareSerial &serial, int aux);
+    LoRa(HardwareSerial &serial, int aux, int chan, int dstH, int dstL);
     void print_config();
-    bool send_message(String msg, int dstH, int dstL, int chan);
+    bool send_message(String msg);
     bool check_receive();
     String receive_message();
 };
 
-LoRa::LoRa(HardwareSerial &serial, int aux){
+LoRa::LoRa(HardwareSerial &serial, int aux, int chan, int dstH, int dstL){
   radio = new LoRa_E220(&serial, aux);
+
+  this->chan = chan;
+  this->dstH = dstH;
+  this->dstL = dstL;
+
   radio->begin();
 }
 
-bool LoRa::send_message(String msg, int dstH, int dstL, int chan){
+bool LoRa::send_message(String msg){
   ResponseStatus rs = radio->sendFixedMessage(dstH, dstL, chan, msg);
 	// Check If there is some problem of succesfully send
 	Serial.println(rs.getResponseDescription());
