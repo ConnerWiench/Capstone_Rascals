@@ -14,13 +14,8 @@ syntax = "proto3";
 package CAPSTONE;
 
 message MainData {
-    float startTime = 1;                            // Time since zeroed out
+    uint32 startTime = 1;                            // Time since zeroed out
     float totalCount = 2;                           // TID level (Total Ionizing dose)
-    float longitude = 5;                            //longitude of the gps at data read
-    float lattitude = 6;                            //lattitude of the gps at data read
-    float altitude = 7;                             //how high the payload is
-    int32 pulseTime = 8;                            //Duration of the read
-    int32 spectrum_count= 10;
-    repeated uint32 spectrum = 9;                   //spectrum data
-
+    int32 pulseTime = 3;                            //Duration of the read
+    repeated uint32 spectrum = 4;                   //spectrum data
 }
