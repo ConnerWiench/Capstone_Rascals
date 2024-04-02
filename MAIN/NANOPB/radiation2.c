@@ -10,8 +10,8 @@
 
 // Function to encode the data that we will be sending
 CAPSTONE_MainData encodeMainData(int bufferSize, uint8_t buffer[],
-                   repeated_int data, float startTime, float totalCount, float lattitude,
-                   float longitude, float altitude, uint32_t pulseTime, uint32_t *messageSize){
+                   repeated_int data, uint32_t startTime, float totalCount, 
+                   uint32_t pulseTime, uint32_t *messageSize){
     
     CAPSTONE_MainData message = CAPSTONE_MainData_init_zero;
 
@@ -20,9 +20,6 @@ CAPSTONE_MainData encodeMainData(int bufferSize, uint8_t buffer[],
     // Load in all of the variables that we need to encode in the message
     message.startTime = startTime;
     message.totalCount = totalCount;
-    message.lattitude = lattitude;
-    message.longitude = longitude;
-    message.altitude = altitude;
     message.pulseTime = pulseTime;
 
     // Make sure to encode the array
@@ -52,15 +49,12 @@ int main(){
     repeated_int data = {10, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}};
     // Encode the message
     for(int i = 0; i < ARR_SIZE; i++){
-        CAPSTONE_MainData testMessage = encodeMainData(BUFFER_SIZE, buffer, data, 1 + i, 2 + i, 3 + i, 4 + i, 5 + i, 6 + i, &messageSize);
+        CAPSTONE_MainData testMessage = encodeMainData(BUFFER_SIZE, buffer, data, 1 + i, 2 + i, 3 + i, &messageSize);
         printf("----------Encoded Output:--------------- \n");
         printf("------------- Count: %d ---------------- \n", i + 1);
 
-        printf("Time since zero: %f\n", testMessage.startTime);
+        printf("Time since zero: %d\n", testMessage.startTime);
         printf("TID Level: %f\n", testMessage.totalCount);
-        printf("Longitude: %f\n", testMessage.longitude);
-        printf("Lattitude: %f\n", testMessage.lattitude);
-        printf("Altitude: %f\n", testMessage.altitude);
         printf("Pulse Time: %d\n", testMessage.pulseTime);
 
         printf("----------------------------------------\n");

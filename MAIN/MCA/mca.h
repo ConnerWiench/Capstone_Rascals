@@ -34,7 +34,7 @@ MCA::MCA(HardwareSerial *ser){
 
 // Zeros out the MCA to reset collected data.
 void MCA::zero_out(){
-  mSerial->write(1); mSerial->write(1); // Get actual zero out bits 
+  mSerial->write((byte)1); mSerial->write((byte)1); // Get actual zero out bits 
 }
 
 // Clears the recentCapture array with all 0's.
@@ -48,7 +48,7 @@ uint32_t MCA::capture(){
   uint timeout = millis() + (1000 * TIMEOUT_SECONDS); // Sets timeout if not all/any data can be read from the MCA.
 
   while(mSerial->available()){mSerial->read();} // Clear out any pre-existing data in the buffer
-  mSerial->write((int)0); mSerial->write((int)16); // Send data request to MCA
+  mSerial->write((byte)0); mSerial->write((byte)16); // Send data request to MCA
   while((!mSerial->available()) && (timeout > millis())){} // Wait for a response with timeout
 
   int hold = 0;

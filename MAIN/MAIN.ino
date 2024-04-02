@@ -7,7 +7,7 @@
 #include "./LORA/LoRa.h"
 #include "./MCA/mca.h"
 // #include "./NANOPB/*"
-// #include "./SLIP/SLIP.h"  Decorator breaks other libraries, may just implement on own.
+// #include "./SLIP/SLIP.h"  //Decorator breaks other libraries, may just implement on own.
 
 #include <stdio.h>
 #include "./NANOPB/pb_encode.h"
@@ -15,18 +15,19 @@
 #include "./NANOPB/rad.pb.h"
 #include "./NANOPB/radQueue.h"
 
-#define RS422_SERIAL Serial5
-#define PLAIN_SERIAL Serial6
+#define RS422_SERIAL Serial2
+#define PLAIN_SERIAL Serial4
 #define LORA_BYTE_MAX 128
 
-LoRa radio(Serial3, 9, 15, 5, 5);     // Define global LoRa object
-MCA mca(&Serial1);          // Define global Scintillator/MCA object
+LoRa radio(Serial1, 19, 15, 5, 5);     // Define global LoRa object
+MCA mca(&Serial5);          // Define global Scintillator/MCA object
 // SLIPStream rs422(Serial7);  // Define Serial interface for RS-422
 // SLIPStream redun(Serial6);  // Define redundacnt Serial link
 
 bool redundant_available();
 byte redundant_read();
 void redundant_write(byte);
+void redundant_send_uint32(uint32_t);
 // void redundant_send_data(Data);
 
 void setup() {
@@ -67,7 +68,7 @@ void loop() {
 
       case 5: // Send current MCA data.
         for(int i = 0; i < mca.captureSize; ++i){
-          redundant_write(mca.recentCapture[i]); // Change to NanoPB
+          redundant_send_uint32(mca.recentCapture[i]); // Change to NanoPB
         }
         redundant_write(254);
         return;
@@ -104,6 +105,20 @@ void loop() {
     mcaRuntime = 0;
     mca.capture();
     RS422_SERIAL.write(4);  // Send interface code for MCA ready.
+    return;
+  }
+
+  if(radio.check_receive()){
+    String msg = radio.receive_message();
+    String validate = "Irradiated Rascals";
+
+    for(uint i = 0; i < msg.length() && i < validate.length(); ++i){
+      if(msg[i] != validate[i]){
+        return;
+      }
+    }
+
+    radio.send_message(msg + ", Hello from space\n");
   }
 
 }
@@ -124,6 +139,10 @@ byte redundant_read(){
 }
 
 void redundant_write(byte payload){
+  RS422_SERIAL.write(payload);
+  PLAIN_SERIAL.write(payload);
+}
+void redundant_send_uint32(uint32_t payload){
   RS422_SERIAL.write(payload);
   PLAIN_SERIAL.write(payload);
 }
