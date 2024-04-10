@@ -22,7 +22,6 @@ class MCA{
   private:
     uint32_t startTime;
     HardwareSerial *mSerial;
-
 };
 
 MCA::MCA(HardwareSerial *ser){
