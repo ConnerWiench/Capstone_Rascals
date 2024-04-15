@@ -1,6 +1,6 @@
 #pragma once
 #include "pb.h"
-#define MAX_REPEATED_VALUES 10
+#define MAX_REPEATED_VALUES 128
 
 /**
  * @brief A wrapper used to pass to NanoPb so that it can encode/decode an array if unsigned ints
