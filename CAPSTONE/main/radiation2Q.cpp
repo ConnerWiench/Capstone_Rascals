@@ -97,7 +97,7 @@ int main(){
     // Test to see if we can store the entire 4096 in the queue structure
     uint32_t testDataBuffer[4096];
     for(uint32_t i = 0; i < 4096; i++){
-        testDataBuffer[i] = 129;
+        testDataBuffer[i] = i;
     }
     
     // printf("Data size: %d\n", MAX_REPEATED_VALUES);

@@ -48,15 +48,18 @@ void MCA::clear_recent(){
 
 // Performs a 4096 byte capture from the MCA.
 bool MCA::capture(){
-  int hold = 0;
-  uint32_t buffer = 0;
-  size_t retries = 0;
+  int hold = 0;   // Holds the immediate read output (8 bits max)
+  uint32_t buffer = 0;    // Combines holds until it reads 32 bits of data.
+  size_t retries = 0;   // Stores the number of times the serial attempts, but can't read the MCA.
+  uint bitOrder[4] = {8,16,24,0};   // Holds the bit shift values for the buffer based on octet receive order.
   uint timeout = millis() + (1000 * TIMEOUT_SECONDS); // Sets timeout if not all/any data can be read from the MCA.
 
   while(mSerial->available()){mSerial->read();} // Clear out any pre-existing data in the buffer
   mSerial->write((int)0); mSerial->write((int)16); // Send data request to MCA
   while((!mSerial->available()) && (timeout > millis())){} // Wait for a response with timeout
-  for(int i = 0; (i < captureSize * CHANNEL_SIZE) && (timeout > millis()); ++i){ // Reads out the serial data against a count instead of if Serial is available.  Also has timeout
+
+  // Reads out the serial data against a count instead of if Serial is available.  Also has timeout
+  for(int i = 0; (i < captureSize * CHANNEL_SIZE) && (timeout > millis()); ++i){ 
     if(!mSerial->available()){
       retries += 1;
       --i;
@@ -65,13 +68,19 @@ bool MCA::capture(){
 
     hold = mSerial->read();
 
-    buffer = (buffer << 8) | hold; // Bitwise shift buffer 8 bits at a read.
-    if(!(i % 4)){ // When 32 bits have been read, save result and clear buffer.
+    // Get what octet we're on.
+    short octet = i % 4;
+    // Combine the read into the overall buffer.
+    // The bit shift must reference the order table because MCA maniacs like doing things out of order.
+    buffer = buffer | (hold << bitOrder[octet]);
+
+    // When 32 bits have been read, save result and clear buffer.
+    if(!(octet)){ 
       recentCapture[i/4] = buffer;
       buffer = 0;
     }
   }
-  Serial.printf("Retries: %u\n", retries); // How many times 
+  Serial.printf("Retries: %u\n", retries); // How many times there was no data ready for a read.
   if(millis() >= timeout){
     Serial.println("Capture Timed out...");
     return 2;  // Return error value if timed out.

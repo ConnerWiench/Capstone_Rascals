@@ -4,10 +4,10 @@
 # Compiler flags to enable all warnings & debug info
 CFLAGS = -Wall -Werror -g -O0
 #CFLAGS += "-I$(NANOPB_DIR)"
-CC = gcc
+CC = g++
 
 # C source code files that are required
-CSRC  = radiation2.c                # The main program
+CSRC  = radiation2Q.cpp                # The main program
 CSRC += rad.pb.c                	# The compiled protocol definition
 CSRC += repeated_serialization.c    # The custom encode / decode
 CSRC += pb_encode.c   				# The nanopb encoder
