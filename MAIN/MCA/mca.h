@@ -5,8 +5,12 @@
 #include "usb_serial.h"
 #include "core_pins.h"
 
+// How many unsigned integers are expected from an MCA capture.
 #define CAPTURE_SIZE 4096
+// How much time is given to capture.  Will end the function if it hangs for longer than this time.
 #define TIMEOUT_SECONDS 10
+// How many bits are being stored in every recentCapture index. 
+// 32 bit integers at 8 bit transfers take 4 data units.
 #define CHANNEL_SIZE 4
 
 #include "HardwareSerial.h"
@@ -17,11 +21,11 @@ class MCA{
     uint32_t recentCapture[CAPTURE_SIZE];
     const int captureSize = CAPTURE_SIZE;
 
-    void clear_recent();
+    MCA(HardwareSerial *ser);r
     void zero_out();
     bool capture();
-    MCA(HardwareSerial *ser);
   private:
+    void clear_recent();
     uint32_t startTime;
     HardwareSerial *mSerial;
 

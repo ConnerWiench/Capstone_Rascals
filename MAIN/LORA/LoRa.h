@@ -15,9 +15,9 @@ class LoRa{
   public:
     LoRa(HardwareSerial &serial, int aux, int chan, int dstH, int dstL);
     void print_config();
-    bool send_message(String msg);
     bool check_receive();
     String receive_message();
+    bool send_message(String msg);
 };
 
 LoRa::LoRa(HardwareSerial &serial, int aux, int chan, int dstH, int dstL){

@@ -7,7 +7,7 @@
 #include "./LORA/LoRa.h"
 #include "./MCA/mca.h"
 // #include "./NANOPB/*"
-// #include "./SLIP/SLIP.h"  //Decorator breaks other libraries, may just implement on own.
+// #include "./SLIP/SLIP.h"  // Decorator breaks other libraries, may just implement on own.
 
 #include <stdio.h>
 #include "./NANOPB/pb_encode.h"
@@ -95,9 +95,15 @@ void loop() {
           loraPayload[i] = redundant_read();
         }
         loraPayload[LORA_BYTE_MAX - 1] = '\0';
+        return;
 
       case 15: // Send LoRa payload
         radio.send_message(loraPayload);
+        return;
+
+      default: // I don't know you
+        Serial.printf("Unrecognized opcode received: %d\n", opcode)
+        redundant_write(254);
     }
   }
 
